@@ -1,0 +1,4 @@
+.pio/
+.vscode/
+*.wav
+.DS_Store
