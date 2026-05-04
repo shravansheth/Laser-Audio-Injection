@@ -1,14 +1,19 @@
 # Wiring
 
-Just the laser. Audio is baked into the firmware — no display, no SD card.
+Nokia 5110 display + laser. Audio is baked into the firmware — no SD card, no buttons.
 
 ## Connections
 
 | XIAO Pin | GPIO | → |
 |----------|------|---|
 | D0 | GPIO0 | 220 Ω → MOSFET gate |
-| D3 | GPIO5 | 220 Ω → power LED |
+| D8 | GPIO19 | Display SCLK |
+| D9 | GPIO20 | Display DC |
+| D10 | GPIO18 | Display MOSI |
+| — | GPIO21 | Display RST |
+| — | GPIO22 | Display CS |
 | 5V | — | Laser (+) |
+| 3V3 | — | Display VCC, Display LED |
 | GND | — | Common ground |
 
 ---
@@ -17,18 +22,38 @@ Just the laser. Audio is baked into the firmware — no display, no SD card.
 
 ```
   XIAO ESP32-C6
-  ┌──────────────────┐
-  │          5V(USB) ├────────────────────────────────────────► Laser (+)
-  │                  │
-  │          GPIO0   ├──[220Ω]──┬──► MOSFET Gate
-  │                  │        [10kΩ]
-  │                  │          │
-  │          GPIO5   ├──[220Ω]──┤── LED (+) ──► LED ──► GND
-  │                  │          │
-  │              GND ├──────────┴──────────────────────────── GND bus
-  └──────────────────┘
-                       MOSFET: Drain → Laser (–), Source → GND
+  ┌──────────────────────┐
+  │              5V(USB) ├────────────────────────────────────► Laser (+)
+  │                  3V3 ├──┬─────────────────────────────────► Display VCC
+  │                      │  └─────────────────────────────────► Display LED
+  │                      │
+  │              GPIO0   ├──[220Ω]──┬──► MOSFET Gate
+  │                      │        [10kΩ]
+  │                      │          │
+  │             GPIO18   ├──────────┤── Display MOSI
+  │             GPIO19   ├──────────┤── Display SCLK
+  │             GPIO20   ├──────────┤── Display DC
+  │             GPIO21   ├──────────┤── Display RST
+  │             GPIO22   ├──────────┤── Display CS
+  │                  GND ├──────────┴── GND bus
+  └──────────────────────┘
+                          MOSFET: Drain → Laser (–), Source → GND
 ```
+
+---
+
+## Nokia 5110 (8 pins)
+
+| Pin | → |
+|-----|---|
+| VCC | 3V3 |
+| GND | GND |
+| SCE | GPIO22 |
+| RST | GPIO21 |
+| DC | GPIO20 |
+| DN/MOSI | GPIO18 |
+| SCLK | GPIO19 |
+| LED | 3V3 (add 33 Ω if no onboard resistor) |
 
 ---
 
@@ -43,15 +68,3 @@ GPIO0 ──[220Ω]──┬──► Gate
 
 5V ──► Laser (+)
 ```
-
-Add a 33 Ω series resistor on Laser (+) if the module has no built-in current limiting.
-
----
-
-## Power LED
-
-```
-GPIO5 ──[220Ω]──► LED (+) ──► LED ──► GND
-```
-
-Turns on at the end of `setup()`.

@@ -1,9 +1,6 @@
-# Laser Audio Injection
+# Laser Audio Injection — Display Test
 
-Amplitude-modulates a laser with audio via I2S PDM on the ESP32-C6. A MOSFET switches
-the laser at ~960 kHz — time-averaged intensity encodes the audio signal.
-
-Audio is embedded in firmware flash and loops continuously.
+Nokia 5110 shows "Lasec" on boot. Audio loaded from firmware flash, streams via I2S PDM.
 
 See [wiring.md](wiring.md) for connections.
 
