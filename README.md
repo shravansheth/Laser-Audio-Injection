@@ -1,12 +1,13 @@
-# Laser Audio Injection — Display Test
+# Laser Audio Injection
 
-Nokia 5110 shows "Lasec" on boot. Audio loaded from firmware flash, streams via I2S PDM.
+SD card WAV playback via I2S PDM laser modulation. Scans the card for WAV files and
+plays the first one found on loop.
 
 See [wiring.md](wiring.md) for connections.
 
 ## Build
 
-WAV must be 8-bit unsigned PCM, mono, 16 kHz. Set `board_build.embed_files = cmd1.wav` in platformio.ini.
+WAV files must be 8-bit unsigned PCM, mono, 16 kHz. Copy to the root of the SD card.
 
 ```bash
 pio run -t upload
