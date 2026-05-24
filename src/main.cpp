@@ -11,11 +11,12 @@ SdFat32 sd;
 #define BTN_PLAY    1
 #define TFT_CS     22
 #define TFT_RST    21
-#define TFT_DC     20
+#define TFT_DC     23
 #define TFT_MOSI   18
 #define TFT_SCK    19
-#define SD_CS       4
+#define SD_CS      16
 #define SD_MISO    20
+#define BTN_NEXT   17
 #define SAMPLE_RATE 16000
 #define MAX_FILES   20
 
@@ -134,10 +135,32 @@ void stopPlay() {
     updateDisplay();
 }
 
+void nextFile() {
+    bool wasPlaying = playing;
+    if (playing) { stopPlay(); }
+    freeAudio();
+    currentFile = (currentFile + 1) % numFiles;
+    updateDisplay();
+    if (wasPlaying) startPlay();
+}
+
+void checkButtons() {
+    static unsigned long lastPlay = 0, lastNext = 0;
+    unsigned long now = millis();
+    if (digitalRead(BTN_PLAY) == LOW && now - lastPlay > 200) {
+        lastPlay = now;
+        if (playing) stopPlay(); else startPlay();
+    }
+    if (digitalRead(BTN_NEXT) == LOW && now - lastNext > 200) {
+        lastNext = now; nextFile();
+    }
+}
+
 void setup() {
     Serial.begin(115200);
     delay(500);
     pinMode(BTN_PLAY, INPUT_PULLUP);
+    pinMode(BTN_NEXT, INPUT_PULLUP);
     SPI.begin(TFT_SCK, SD_MISO, TFT_MOSI, TFT_CS);
     display.begin();
     display.setContrast(60);
@@ -153,12 +176,7 @@ void setup() {
 }
 
 void loop() {
-    static unsigned long lastPlay = 0;
-    unsigned long now = millis();
-    if (digitalRead(BTN_PLAY) == LOW && now - lastPlay > 200) {
-        lastPlay = now;
-        if (playing) stopPlay(); else startPlay();
-    }
+    checkButtons();
     if (playing && audioS16) {
         size_t left  = audioLen - playPos;
         size_t chunk = min(left, (size_t)256);
