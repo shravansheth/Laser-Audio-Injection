@@ -6,6 +6,8 @@ The PDM signal from the ESP32's I2S peripheral drives a MOSFET that switches the
 
 Tested on Google Home Mini — works up to ~30 ft with a 5 mW laser.
 
+![Handheld prototype](handheld.jpg)
+
 ---
 
 ## Branches
@@ -52,24 +54,33 @@ See [`wiring.md`](wiring.md) for the full diagram.
 
 ---
 
+## Preparing audio
+
+Record or find a WAV of the command you want to inject. In Audacity:
+
+1. Open your audio file
+2. **Tracks → Stereo to Mono** if it's stereo
+3. Set the project rate to **16000 Hz** (bottom-left dropdown)
+4. **File → Export Audio** → WAV format, Unsigned 8-bit PCM encoding
+5. Copy the exported file to the root of the SD card
+
+The device lists all `.wav` files on boot automatically.
+
+---
+
 ## Setup
 
-```bash
-git clone <repo-url>
-cd <repo>
-```
-
-Open in VS Code with PlatformIO installed.
-
-WAV files need to be **8-bit unsigned PCM, mono, 16 kHz**. Convert in Audacity:
-1. Tracks → Stereo to Mono
-2. Export as WAV → Unsigned 8-bit PCM, 16000 Hz
-
-Drop them on the SD card root. The device picks them up automatically.
+Open in VS Code with PlatformIO installed, then flash:
 
 ```bash
 pio run -t upload
 ```
+
+---
+
+## Enclosure
+
+STL files for the 3D printed handheld enclosure are in the [`STL files/`](STL%20files/) folder.
 
 ---
 
