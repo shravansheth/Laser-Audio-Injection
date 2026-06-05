@@ -1,4 +1,5 @@
 .pio/
 .vscode/
 *.wav
+!Audio files/*.wav
 .DS_Store
