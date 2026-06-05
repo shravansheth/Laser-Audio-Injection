@@ -6,7 +6,7 @@ The PDM signal from the ESP32's I2S peripheral drives a MOSFET that switches the
 
 Tested on Google Home Mini — works up to ~30 ft with a 5 mW laser.
 
-![Handheld prototype](handheld.jpg)
+<img src="handheld.jpg" width="400" alt="Handheld prototype">
 
 ---
 
