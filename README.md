@@ -56,13 +56,23 @@ See [`wiring.md`](wiring.md) for the full diagram.
 
 ## Preparing audio
 
-Record or find a WAV of the command you want to inject. In Audacity:
+Start with a WAV recording of the command you want to inject, then process it in Audacity:
 
-1. Open your audio file
-2. **Tracks → Stereo to Mono** if it's stereo
-3. Set the project rate to **16000 Hz** (bottom-left dropdown)
-4. **File → Export Audio** → WAV format, Unsigned 8-bit PCM encoding
-5. Copy the exported file to the root of the SD card
+**Format:**
+1. Tracks → Stereo to Mono (if stereo)
+2. Set the project rate to **16000 Hz** (bottom-left dropdown)
+
+**Noise reduction pipeline** — run these in order:
+1. Select a short clip of background silence → Effect → Noise Reduction → *Get Noise Profile*
+2. Select all (Ctrl+A), then apply each of these in sequence:
+   - Noise Reduction
+   - Compressor
+   - Normalize
+   - Equalization — apply a Bass Boost curve, then a Treble Boost curve
+   - Hard Limiter at −4 dB
+   - Amplify — go in 2 dB increments until the signal is as loud as possible without clipping
+
+**Export:** File → Export Audio → WAV, Unsigned 8-bit PCM. Copy to the root of the SD card.
 
 The device lists all `.wav` files on boot automatically.
 
